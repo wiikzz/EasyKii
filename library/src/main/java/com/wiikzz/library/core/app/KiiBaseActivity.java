@@ -57,13 +57,14 @@ public class KiiBaseActivity extends FragmentActivity {
         removeAllCallbacksAndMessages();
     }
 
-    protected void openLazyLoader() {
+    // 打开延迟任务处理
+    protected void openLazyLoader(long delayTime) {
         postRunnable(new Runnable() {
             @Override
             public void run() {
                 lazyInitData();
             }
-        }, 350L);
+        }, delayTime);
     }
 
     protected void lazyInitData() {
