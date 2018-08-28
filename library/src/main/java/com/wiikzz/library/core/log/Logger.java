@@ -10,7 +10,11 @@ import com.wiikzz.library.core.app.KiiConfiguration;
  */
 public class Logger {
     private static final String KII_BASE_TAG = KiiConfiguration.getAppBaseTag();
-    public static final boolean DEBUG = KiiConfiguration.isDebugMode();
+    private static final boolean DEBUG = isLoggable();
+
+    public static boolean isLoggable() {
+        return KiiConfiguration.isDebugMode();
+    }
 
     public static void v(String tag, String message) {
         if (DEBUG) {
