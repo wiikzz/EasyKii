@@ -34,6 +34,24 @@ public class MD5Utils {
         return stringBuffer.toString();
     }
 
+    public static byte[] hexStringToBytes(String hexStringSource) {
+        if (TextUtils.isEmpty(hexStringSource)) {
+            return null;
+        }
+
+        try {
+            byte[] result = new byte[hexStringSource.length() / 2];
+            for (int i = 0; i < hexStringSource.length() / 2; i++) {
+                int high = Integer.parseInt(hexStringSource.substring(i * 2, i * 2 + 1), 16);
+                int low = Integer.parseInt(hexStringSource.substring(i * 2 + 1, i * 2 + 2), 16);
+                result[i] = (byte) (high * 16 + low);
+            }
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String getMd5ForString(String value) {
         if (TextUtils.isEmpty(value)) {
             return null;
