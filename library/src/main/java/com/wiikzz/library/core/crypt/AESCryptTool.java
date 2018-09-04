@@ -25,8 +25,8 @@ public class AESCryptTool {
     private static final String AES_CRYPT_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
     // 加解密对应的密钥
-    private static final String sIvParamString = "2345tqIv_shiqing";
-    private static final String sSecretKeyString = "2345android_key_";
+    private static final String sIvParamString = "abcdtqIv_wiikzz_";
+    private static final String sSecretKeyString = "abcdandroid_key_";
 
     /**
      * AES加密
