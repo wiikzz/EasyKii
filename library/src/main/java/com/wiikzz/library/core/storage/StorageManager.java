@@ -34,26 +34,30 @@ public class StorageManager {
             return null;
         }
 
-        File cacheDirectory = null;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
-            cacheDirectory = context.getExternalCacheDir();
-        }
+        try {
+            File cacheDirectory = null;
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                    || !Environment.isExternalStorageRemovable()) {
+                cacheDirectory = context.getExternalCacheDir();
+            }
 
-        if (cacheDirectory == null || !cacheDirectory.exists()) {
-            cacheDirectory = context.getCacheDir();
-        }
+            if (cacheDirectory == null || !cacheDirectory.exists()) {
+                cacheDirectory = context.getCacheDir();
+            }
 
-        if (cacheDirectory == null || !cacheDirectory.exists()) {
+            if (cacheDirectory == null || !cacheDirectory.exists()) {
+                return null;
+            }
+
+            File categoryCacheDirectory = new File(cacheDirectory, cacheCategory);
+            if (!categoryCacheDirectory.exists()) {
+                categoryCacheDirectory.mkdirs();
+            }
+
+            return categoryCacheDirectory;
+        } catch (Throwable throwable) {
             return null;
         }
-
-        File categoryCacheDirectory = new File(cacheDirectory, cacheCategory);
-        if (!categoryCacheDirectory.exists()) {
-            categoryCacheDirectory.mkdirs();
-        }
-
-        return categoryCacheDirectory;
     }
 
     // 获取应用缓存目录
@@ -66,30 +70,42 @@ public class StorageManager {
     }
 
     public static File getAppStorageDirectory() {
-        File externalStorage = Environment.getExternalStorageDirectory();
-        File appStorageDirectory = new File(externalStorage, STORAGE_APP_DIRECTORY_NAME);
-        if (!appStorageDirectory.exists()) {
-            appStorageDirectory.mkdirs();
-        }
+        try {
+            File externalStorage = Environment.getExternalStorageDirectory();
+            File appStorageDirectory = new File(externalStorage, STORAGE_APP_DIRECTORY_NAME);
+            if (!appStorageDirectory.exists()) {
+                appStorageDirectory.mkdirs();
+            }
 
-        return appStorageDirectory;
+            return appStorageDirectory;
+        } catch (Throwable throwable) {
+            return null;
+        }
     }
 
     public static File getUpdateStorageDirectory() {
-        File directory = new File(getAppStorageDirectory(), STORAGE_APP_UPDATE_DIR_NAME);
-        if (!directory.exists()) {
-            directory.mkdirs();
+        File appStorageDirectory = getAppStorageDirectory();
+        if (appStorageDirectory != null) {
+            File directory = new File(appStorageDirectory, STORAGE_APP_UPDATE_DIR_NAME);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            return directory;
+        } else {
+            return null;
         }
-
-        return directory;
     }
 
     public static File getDownloadStorageDirectory() {
-        File directory = new File(getAppStorageDirectory(), STORAGE_APP_DOWNLOAD_DIR_NAME);
-        if (!directory.exists()) {
-            directory.mkdirs();
+        File appStorageDirectory = getAppStorageDirectory();
+        if (appStorageDirectory != null) {
+            File directory = new File(appStorageDirectory, STORAGE_APP_DOWNLOAD_DIR_NAME);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            return directory;
+        } else {
+            return null;
         }
-
-        return directory;
     }
 }
