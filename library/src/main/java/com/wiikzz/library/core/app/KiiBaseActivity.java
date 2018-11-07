@@ -57,19 +57,6 @@ public class KiiBaseActivity extends FragmentActivity {
         removeAllCallbacksAndMessages();
     }
 
-    // 打开延迟任务处理
-    protected void openLazyLoader(long delayTime) {
-        postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                lazyInitData();
-            }
-        }, delayTime);
-    }
-
-    protected void lazyInitData() {
-    }
-
     // 处理Handler发来的Message
     protected void handleMessage(Message message) {
     }
@@ -133,12 +120,7 @@ public class KiiBaseActivity extends FragmentActivity {
     // 线程执行
     public void executeRunnableInThread(Runnable runnable) {
         if (mThreadPoolUtils == null) {
-            synchronized (this) {
-                if (mThreadPoolUtils == null) {
-                    mThreadPoolUtils = new ThreadPoolUtils(ThreadPoolUtils.Type.FixedThread,
-                            Runtime.getRuntime().availableProcessors());
-                }
-            }
+            mThreadPoolUtils = ThreadPoolUtils.instance();
         }
 
         mThreadPoolUtils.execute(runnable);
