@@ -17,6 +17,21 @@ import java.util.concurrent.TimeoutException;
  * Copyright (C) 2018. wiikii. All rights reserved.
  */
 public class ThreadPoolUtils {
+    private static ThreadPoolUtils _INSTANCE = null;
+
+    public static ThreadPoolUtils instance() {
+        if (_INSTANCE == null || _INSTANCE.isShutDown()) {
+            synchronized (ThreadPoolUtils.class) {
+                if (_INSTANCE == null || _INSTANCE.isShutDown()) {
+                    _INSTANCE = new ThreadPoolUtils(ThreadPoolUtils.Type.FixedThread,
+                            Runtime.getRuntime().availableProcessors() * 2);
+                }
+            }
+        }
+
+        return _INSTANCE;
+    }
+
     private ThreadPoolUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
@@ -36,7 +51,7 @@ public class ThreadPoolUtils {
      * @param type         线程池类型
      * @param corePoolSize 只对Fixed和Scheduled线程池起效
      */
-    public ThreadPoolUtils(Type type, int corePoolSize) {
+    private ThreadPoolUtils(Type type, int corePoolSize) {
         // 构造有定时功能的线程池
         // ThreadPoolExecutor(corePoolSize, Integer.MAX_VALUE, 10L, TimeUnit.MILLISECONDS, new BlockingQueue<Runnable>)
         scheduleExec = Executors.newScheduledThreadPool(corePoolSize);
@@ -70,6 +85,9 @@ public class ThreadPoolUtils {
      * @param command 命令
      */
     public void execute(Runnable command) {
+        if (exec.isShutdown()) {
+            return;
+        }
         exec.execute(command);
     }
 
@@ -80,6 +98,9 @@ public class ThreadPoolUtils {
      * @param commands 命令链表
      */
     public void execute(List<Runnable> commands) {
+        if (exec.isShutdown()) {
+            return;
+        }
         for (Runnable command : commands) {
             exec.execute(command);
         }
